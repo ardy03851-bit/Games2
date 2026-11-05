@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1c2b1a">
+<title>Cozy Vale — a tiny hand-painted valley</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<canvas id="game"></canvas>
+<div id="vignette"></div>
+
+<!-- in-game HUD -->
+<div id="hud" class="hidden">
+  <div class="hud-group" id="hud-left">
+    <span class="res-pill" title="Wood"><span class="res-ico">🪵</span><b id="wood">0</b></span>
+    <span class="res-pill" title="Stone"><span class="res-ico">🪨</span><b id="stone">0</b></span>
+  </div>
+  <div class="hud-group" id="hud-center">
+    <span id="clock" title="Time of day">☀️</span>
+    <span id="seed-label" title="Valley seed"></span>
+  </div>
+  <div class="hud-group" id="hud-right">
+    <button id="btn-sound" class="hud-btn" title="Sound">🔊</button>
+    <button id="btn-menu" class="hud-btn" title="Menu">☰</button>
+  </div>
+</div>
+
+<!-- tool buttons (iPad friendly, bottom right) -->
+<div id="toolbar" class="hidden">
+  <button id="btn-build" class="tool-btn" title="Build menu (B)"><span class="tb-ico">🧱</span><span class="tb-lbl">Build</span></button>
+  <button id="btn-interact" class="tool-btn" title="Gather wood & stone (E)"><span class="tb-ico">🪓</span><span class="tb-lbl">Gather</span></button>
+  <button id="btn-rotate" class="tool-btn" title="Rotate piece (R)"><span class="tb-ico">⟳</span><span class="tb-lbl">Rotate</span></button>
+  <button id="btn-remove" class="tool-btn" title="Remove placed piece (X)"><span class="tb-ico">🗑️</span><span class="tb-lbl">Remove</span></button>
+</div>
+
+<!-- build palette -->
+<div id="palette" class="hidden">
+  <div id="palette-tabs"></div>
+  <div id="palette-grid"></div>
+  <div id="palette-hint">tap a tile to place · drag to place many · B / Esc closes</div>
+</div>
+
+<!-- touch joystick -->
+<div id="joystick" class="hidden"><div id="joy-base"><div id="joy-nub"></div></div></div>
+
+<div id="toast-wrap"></div>
+
+<!-- pause / menu overlay -->
+<div id="menu" class="overlay hidden">
+  <div class="sheet">
+    <h2>☰ Menu</h2>
+    <div class="menu-row"><label for="seed-input">Valley seed</label>
+      <input id="seed-input" type="text" maxlength="24" spellcheck="false">
+      <button id="btn-newvalley" class="btn">🎲 New valley</button>
+    </div>
+    <button id="btn-help" class="btn wide">❓ How to play</button>
+    <button id="btn-sound2" class="btn wide">🔊 Sound: on</button>
+    <button id="btn-close-menu" class="btn wide">▶ Back to the valley</button>
+    <p class="menu-note">The world auto-saves in this browser. The camera is fixed — just enjoy the view. 🍃</p>
+  </div>
+  <div id="help" class="sheet hidden">
+    <h2>❓ How to play</h2>
+    <ul class="help-list">
+      <li>🚶 <b>Walk:</b> WASD / arrow keys, the left touch-stick, or tap the ground to walk there.</li>
+      <li>🪓 <b>Gather:</b> stand near a tree or boulder and press <b>Gather</b> (E) for wood &amp; stone. They regrow.</li>
+      <li>🧱 <b>Build:</b> press <b>Build</b> (B), pick a piece, tap a tile to place. Drag to place fences &amp; paths. ⟳ rotates, 🗑️ removes (50% refund).</li>
+      <li>🏠 <b>Home:</b> lay stone floors, raise walls (door &amp; window variants), top with roofs and a chimney. Lamps &amp; campfires glow at night.</li>
+      <li>🌊 <b>Rivers:</b> stepping stones and bridges let you cross. Watch the waterfalls!</li>
+      <li>🌗 The valley slowly cycles day → dusk → night. Fireflies come out at night.</li>
+      <li>🎲 Make a brand-new hand-crafted valley any time from the menu.</li>
+    </ul>
+    <button id="btn-close-help" class="btn wide">Got it!</button>
+  </div>
+</div>
+
+<!-- title screen -->
+<div id="title" class="overlay">
+  <img id="title-art" src="assets/title.png" alt="">
+  <div class="title-shade"></div>
+  <div class="title-content">
+    <h1>Cozy&nbsp;Vale</h1>
+    <p class="tagline">a tiny hand-painted valley to call home</p>
+    <button id="btn-play" class="btn big">▶&nbsp; Play</button>
+    <button id="btn-new" class="btn big ghost">🎲&nbsp; New valley</button>
+    <p id="load-progress">painting the valley…</p>
+    <p class="hint">WASD / arrows / left stick to walk · tap ground to go there · 🧱 build your cozy home<br>
+    works great on iPad &amp; touch screens · camera is fixed on purpose 🌿</p>
+  </div>
+</div>
+
+<script src="js/util.js"></script>
+<script src="js/assets.js"></script>
+<script src="js/sprites.js"></script>
+<script src="js/terrain.js"></script>
+<script src="js/props.js"></script>
+<script src="js/particles.js"></script>
+<script src="js/character.js"></script>
+<script src="js/render.js"></script>
+<script src="js/build.js"></script>
+<script src="js/input.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
