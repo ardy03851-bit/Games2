@@ -25,11 +25,13 @@
   C.reset = function (w) { C.x = w.spawn.x + 0.5; C.y = w.spawn.y + 0.5; C.path = null; C.z = w.h[w.spawn.y * w.W + w.spawn.x]; };
 
   C.setTarget = function (w, tx, ty) {
+    const sx = Math.floor(C.x), sy = Math.floor(C.y);
     const path = CV.astar(w.W, w.H,
-      (x, y) => CV.walkableAt(w, x, y) && Math.abs(w.h[y * w.W + x] - w.h[Math.floor(C.y) * w.W + Math.floor(C.x)]) <= 1 || CV.walkableAt(w, x, y),
-      () => 1,
-      { x: Math.floor(C.x), y: Math.floor(C.y) }, { x: tx, y: ty }, 3000);
+      (x, y) => CV.walkableAt(w, x, y),
+      (x, y) => 1 + Math.abs(w.h[y * w.W + x] - w.h[sy * w.W + sx]) * 0.5,
+      { x: sx, y: sy }, { x: tx, y: ty }, 3000);
     if (path && path.length > 1) { C.path = path.slice(1); C.pi = 0; }
+    else C.path = null;
   };
 
   C.update = function (dt, w) {

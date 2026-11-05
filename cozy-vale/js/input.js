@@ -3,7 +3,7 @@
 (function () {
   const CV = window.CV;
   const I = CV.input = { move: { x: 0, y: 0 }, hover: null, keys: {} };
-  const joy = { active: false, id: null, dx: 0, dy: 0 };
+  const joy = { active: false, id: null, bx: 0, by: 0, dx: 0, dy: 0 };
   let canvas = null;
   let dragPlacing = false, lastDragTile = null;
 
@@ -24,13 +24,14 @@
     canvas.addEventListener('pointerdown', (e) => {
       CV.audio.unlock();
       const x = e.clientX, y = e.clientY;
-      // joystick zone: left-bottom area on touch
+      // joystick zone: left-bottom area on touch devices
       if (e.pointerType === 'touch' && x < innerWidth * 0.45 && y > innerHeight * 0.42) {
-        joy.active = true; joy.id = e.pointerId; joy.dx = 0; joy.dy = 0;
+        joy.active = true; joy.id = e.pointerId;
+        joy.bx = x; joy.by = y; joy.dx = 0; joy.dy = 0;
         const base = document.getElementById('joy-base');
         base.style.display = 'block';
         base.style.left = x + 'px'; base.style.top = y + 'px';
-        moveNub(x, y);
+        setNub(0, 0);
         return;
       }
       const tile = CV.render.pickTile(x, y);
@@ -48,13 +49,11 @@
     canvas.addEventListener('pointermove', (e) => {
       const x = e.clientX, y = e.clientY;
       if (joy.active && e.pointerId === joy.id) {
-        const base = document.getElementById('joy-base');
-        const bx = parseFloat(base.style.left), by = parseFloat(base.style.top);
-        let dx = x - bx, dy = y - by;
+        let dx = x - joy.bx, dy = y - joy.by;
         const len = Math.hypot(dx, dy), max = 52;
         if (len > max) { dx = dx / len * max; dy = dy / len * max; }
         joy.dx = dx / max; joy.dy = dy / max;
-        moveNub(bx + dx, by + dy);
+        setNub(dx, dy);
         return;
       }
       const tile = CV.render.pickTile(x, y);
@@ -70,7 +69,7 @@
       if (joy.active && e.pointerId === joy.id) {
         joy.active = false; joy.id = null; joy.dx = 0; joy.dy = 0;
         document.getElementById('joy-base').style.display = 'none';
-        moveNub(0, 0);
+        setNub(0, 0);
       }
       dragPlacing = false; lastDragTile = null;
     };
@@ -79,11 +78,9 @@
     canvas.addEventListener('contextmenu', (e) => e.preventDefault());
   };
 
-  function moveNub(x, y) {
-    const nub = document.getElementById('joy-nub');
-    nub.style.left = '50%'; nub.style.top = '50%';
-    nub.style.transform = `translate(calc(-50% + ${x ? 0 : 0}px), -50%)`;
-    if (x || y) nub.style.transform = `translate(calc(-50% + ${(x - parseFloat(document.getElementById('joy-base').style.left))}px), calc(-50% + ${(y - parseFloat(document.getElementById('joy-base').style.top))}px))`;
+  function setNub(dx, dy) {
+    document.getElementById('joy-nub').style.transform =
+      'translate(calc(-50% + ' + dx + 'px), calc(-50% + ' + dy + 'px))';
   }
 
   I.update = function () {
